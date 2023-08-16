@@ -6,21 +6,23 @@ function removeDuplicates(array) {
 
     var ArraysKeys = {
 
-
     }
-
     for (let item of array) {
-
-        if (ArraysKeys.hasOwnProperty(item)) {
-            ArraysKeys[item] = ArraysKeys[item] + 1
-
-        }
-        else {
-            ArraysKeys[item] = 0
-        }
-
+            ArraysKeys[item] = item
     }
-    return Object.keys(ArraysKeys)
+
+    let keysList = Object.keys(ArraysKeys)
+    let uniqueArray  = keysList.map((item)=>(
+        ArraysKeys[item]
+    ))
+    return uniqueArray
+}
+
+function removeDuplicatesWithSet(array){
+
+return [...new Set(array)]
+
 }
 
 console.log(removeDuplicates(duplicatesArray));
+console.log(removeDuplicatesWithSet(duplicatesArray));
