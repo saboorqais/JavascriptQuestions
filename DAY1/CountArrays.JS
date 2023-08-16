@@ -26,7 +26,6 @@ function countArrays(array)
 }
 
 countArrays(example2DArray)
-countArrays(example2DArray)
 
 
 console.log("Total Arrays in our Input is :" + (count))
