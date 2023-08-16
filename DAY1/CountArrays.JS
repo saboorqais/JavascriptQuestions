@@ -1,4 +1,4 @@
-var example2DArray = [[],{}]
+var example2DArray = [[],{},[[]]]
 
 function countArrays(array){
     count = 0
