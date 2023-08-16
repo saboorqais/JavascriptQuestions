@@ -15,10 +15,10 @@ function getDataUsingCallbacks(url, callback) {
             callback(data); // Call the provided callback with the response data
         })
 }
-
-getDataUsingCallbacks("https://jsonplaceholder.typicode.com/users",(data)=>{
+/* 
+getDataUsingCallbacks("https://jsonplaceholder.typicode.com/users", (data) => {
     console.log(getPhoneNumbers(data))
-})
+}) */
 
 function createPromise(url) {
     return new Promise((resolve, reject) => {
@@ -48,28 +48,21 @@ function getDataUsingPromise(url) {
         console.log(err)
     })
 }
-getDataUsingPromise("https://jsonplaceholder.typicode.com/users")
+//getDataUsingPromise("https://jsonplaceholder.typicode.com/users")
 
 
-async function awaitCreate(url){
+
+async function getDataUsingAsync(url) {
+
+
     try {
         let response = await fetch(url)
         const data = await response.json();
-        return data;
-    
+        console.log(getPhoneNumbers(data));
+
     } catch (error) {
         throw error
     }
-}
-
-async function getDataUsingAsync(url){
-
-try {
-    let data = await awaitCreate(url)
-    console.log( getPhoneNumbers(data))
-} catch (error) {
-    throw error
-}
 
 
 }
