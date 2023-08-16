@@ -24,5 +24,11 @@ return [...new Set(array)]
 
 }
 
-console.log(removeDuplicates(duplicatesArray));
-console.log(removeDuplicatesWithSet(duplicatesArray));
+
+module.exports = {
+    removeDuplicatesWithSet
+}
+
+
+
+
