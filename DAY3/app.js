@@ -1,4 +1,5 @@
 //imports
+require('dotenv').config();
 const express = require('express')
 var cors = require('cors')
 const bodyParser = require('body-parser');
