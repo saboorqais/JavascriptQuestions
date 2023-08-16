@@ -13,4 +13,21 @@ async function getComments(req, res) {
 
 }
 
-module.exports = {getComments}
+
+async function getComment(req, res) {
+
+    try {
+        const id = req.params.id;
+
+        const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`);
+        console.log(response)
+        const comments = await response.json();
+        console.log(comments)
+        res.status(200).send({"comments":comments} );
+    } catch (error) {
+        res.status(500).send('Error fetching Comments');
+    }
+
+}
+
+module.exports = {getComments,getComment}
