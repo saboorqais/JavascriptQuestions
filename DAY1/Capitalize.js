@@ -3,13 +3,14 @@ var nameArray = ['Saboor', "Akram", "AKRAM", ""]
 
 function capitalizeName(array) {
 
-    let capitalizedName = []
+    let capitalizedNames = []
     for (let name of nameArray) {
-        capitalizedName.push(name.toUpperCase())
+        let captilizedNamed = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+        capitalizedNames.push(captilizedNamed)
 
     }
-    return capitalizedName
+    return capitalizedNames
 
 }
 
-console.log(capitalizeName(nameArray))
+console.log(capitalizeName(nameArray)) 
