@@ -39,4 +39,3 @@ export async function getPostWithComments(req: Request, res: Response) {
 
 
 
-module.exports = {getPosts,getPostWithComments}
