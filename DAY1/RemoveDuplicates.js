@@ -1,4 +1,4 @@
-var duplicatesArray = [1, 2, 3, 4, 5, 1, 1, 1, 1,"John","John"]
+var duplicatesArray = [1, 0, 1, 0]
 
 
 

@@ -1,4 +1,4 @@
-var nameArray = ['Saboor', "Akram", "AKRAM", ""]
+var nameArray = ["Slyvia", "Kristal", "Sharilyn", "Calista"]
 
 
 function capitalizeName(array) {

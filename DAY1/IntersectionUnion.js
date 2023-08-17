@@ -23,8 +23,8 @@ return [...new Set(joinArray)]
 
 function main(){
 
-let array1= ["67"]
-let array2 = [1,3,4,5,67,6]
+let array1= [1, 2, 3]
+let array2 =  [4, 5, 6]
 
 
 array1 = removeDuplicatesWithSet(array1)

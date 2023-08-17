@@ -1,5 +1,6 @@
 const { log } = require("console");
 const fetch = require("node-fetch")
+
 function getPhoneNumbers(data) {
     let phoneNumbers = []
     for (let item of data) {
@@ -15,40 +16,27 @@ function getDataUsingCallbacks(url, callback) {
             callback(data); // Call the provided callback with the response data
         })
 }
-/* 
-getDataUsingCallbacks("https://jsonplaceholder.typicode.com/users", (data) => {
+
+/* getDataUsingCallbacks("https://jsonplaceholder.typicode.com/users", (data) => {
     console.log(getPhoneNumbers(data))
-}) */
+}) 
+ */
 
-function createPromise(url) {
-    return new Promise((resolve, reject) => {
-
-        fetch(url).then(response => {
-            if (!(response.status == 200)) {
-                throw new Error(`Request Error ${response.status}`)
-            }
-            return response.json()
-        }).then(data => {
-            resolve(data)
-        }).catch(err => {
-            reject(err)
-        })
-
-
-
-    })
-}
 
 function getDataUsingPromise(url) {
-    createPromise(url).then(
-        data => {
-            console.log(getPhoneNumbers(data))
+
+    fetch(url).then(response => {
+        if (!(response.status == 200)) {
+            throw new Error(`Request Error ${response.status}`)
         }
-    ).catch(err => {
-        console.log(err)
+        return response.json()
+    }).then(data => {
+        console.log(getPhoneNumbers(data))
+       
+    }).catch(err => {
     })
 }
-//getDataUsingPromise("https://jsonplaceholder.typicode.com/users")
+getDataUsingPromise("https://jsonplaceholder.typicode.com/users")
 
 
 
@@ -67,4 +55,4 @@ async function getDataUsingAsync(url) {
 
 }
 
-getDataUsingAsync("https://jsonplaceholder.typicode.com/users")
+//getDataUsingAsync("https://jsonplaceholder.typicode.com/users")

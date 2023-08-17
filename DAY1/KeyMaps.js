@@ -1,4 +1,8 @@
-let objectMap = { '1': {}, '2': 0, '3': [], '4': 0, '5': 0, "John": 1 }
+let objectMap = {
+D: 1,
+B: 2,
+C: 3
+}
 
 
 function mappingKeystoArray(array){
