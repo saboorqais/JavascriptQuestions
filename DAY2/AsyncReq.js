@@ -14,7 +14,7 @@ function getDataUsingCallbacks(url, callback) {
     fetch(url).then(response => response.json())
         .then(data => {
             callback(data); // Call the provided callback with the response data
-        })
+        }).catch(err=>console.log(err))
 }
 
 /* getDataUsingCallbacks("https://jsonplaceholder.typicode.com/users", (data) => {
@@ -25,11 +25,7 @@ function getDataUsingCallbacks(url, callback) {
 
 function getDataUsingPromise(url) {
 
-    fetch(url).then(response => {
-        if (!(response.status == 200)) {
-            throw new Error(`Request Error ${response.status}`)
-        }
-        return response.json()
+    fetch(url).then(response => {response.json()
     }).then(data => {
         console.log(getPhoneNumbers(data))
        
