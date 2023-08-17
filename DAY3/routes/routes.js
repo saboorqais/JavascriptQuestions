@@ -8,6 +8,7 @@ const commentsController = require('../controller/comments');
 const router = express.Router();
 
 router.get('/posts', postController.getPosts);
+router.get('/posts/:id', postController.getPostWithComments);
 
 router.get('/comments', commentsController.getComments); 
 router.get('/posts/:id/comments', commentsController.getComment); 

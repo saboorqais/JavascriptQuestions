@@ -1,15 +1,15 @@
-const { log } = require("console")
+type MixedArray = (number | string | object | any[])[];
 
-var example2DArray = [1, 2, 3]
-var count; 
-function countArrays(array)
+var example2DArray: MixedArray= [1, 2, 3]
+var count:number; 
+function countArrays(array : MixedArray)
 {
     count=0 
     countArraysRecursive(array)
     console.log("Total Arrays in our Input is :" + (count))
    
 }
-function countArraysRecursive(array){
+function countArraysRecursive(array:MixedArray){
    
     for (let item of array){
         
