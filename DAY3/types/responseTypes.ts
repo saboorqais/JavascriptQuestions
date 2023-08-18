@@ -12,7 +12,25 @@ export interface Post {
     title: string;
     body: string;
 }
+export interface PostComment {
+    userId: number;
+    id: number;
+    title: string;
+    body: string;
+    comments:Comment[]
+}
+export interface UserDataPostObject  {
+    id: number,
+    name: string
+    username: string,
+    email: string,
+    address: AddressObject,
+    phone: string,
+    website: string,
+    company: CompanyData
+    posts : Post[]
 
+}
 export interface UserDataObject  {
     id: number,
     name: string
@@ -40,3 +58,7 @@ type GeoLocationObject = {
     catchPhrase: string,
     bs: string
 }
+
+export type DynamicStringObject = {
+    [key: string]: string  | string[]  | undefined;
+};

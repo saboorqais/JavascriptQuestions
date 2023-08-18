@@ -8,10 +8,12 @@ const router = Router();
 router.get('/posts', postController.getPosts);
 router.get('/posts/:id', postController.getPostWithComments); 
 
+
 router.get('/comments', commentsController.getComments);
 router.get('/posts/:id/comments', commentsController.getComment);
 
-router.get('/users', userController.getUsers); 
+router.get('/users-all', userController.getUsers); 
 router.get('/users/:id/posts', userController.getUsersPost); 
+router.get('/users', userController.getUsers); 
 
 export default router;     
