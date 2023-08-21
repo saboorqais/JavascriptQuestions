@@ -1,64 +1,53 @@
-export interface Comment {
-    postId: number;
-    id: number;
-    name: string;
-    email: string;
-    body: string;
+export interface Id {
+  id: number;
+}
+export interface Name {
+  name: string;
 }
 
-export interface Post {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
+export interface Comment extends Id, Name {
+  postId: number;
+  email: string;
+  body: string;
 }
-export interface PostComment {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
-    comments:Comment[]
-}
-export interface UserDataPostObject  {
-    id: number,
-    name: string
-    username: string,
-    email: string,
-    address: AddressObject,
-    phone: string,
-    website: string,
-    company: CompanyData
-    posts : Post[]
 
+export interface Post extends Id {
+  userId: number;
+  title: string;
+  body: string;
 }
-export interface UserDataObject  {
-    id: number,
-    name: string
-    username: string,
-    email: string,
-    address: AddressObject,
-    phone: string,
-    website: string,
-    company: CompanyData}
+export interface PostComment extends Post {
+  comments: Comment[];
+}
+export interface UserDataPostObject extends UserDataObject {
+  posts: Post[];
+}
+export interface UserDataObject extends Name, Id {
+  username: string;
+  email: string;
+  address: AddressObject;
+  phone: string;
+  website: string;
+  company: CompanyData;
+}
 
 type AddressObject = {
-    street: string,
-    suite: string,
-    city: string,
-    zipcode: string,
-    geo: GeoLocationObject
-  }
+  street: string;
+  suite: string;
+  city: string;
+  zipcode: string;
+  geo: GeoLocationObject;
+};
 
 type GeoLocationObject = {
-    lat:string,
-    lng: string
-  }
-  type CompanyData = {
-    name: string,
-    catchPhrase: string,
-    bs: string
+  lat: string;
+  lng: string;
+};
+export interface CompanyData extends Name {
+  catchPhrase: string;
+  bs: string;
 }
 
 export type DynamicStringObject = {
-    [key: string]: string  | string[]  | undefined;
+  [key: string]: string | string[] | undefined;
 };
