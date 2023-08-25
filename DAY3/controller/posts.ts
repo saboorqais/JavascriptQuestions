@@ -27,12 +27,16 @@ import { Comment, Post, PostComment } from "../types/responseTypes";
  * //               "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
  * //           },
  * **/
+
+
+//Promote Object Destructring
 export async function getPosts(req: Request, res: Response) {
   try {
     //getting Keywords from the Request Object
     const titleKeyword = req.query.title as string | undefined;
     const bodyKeyword = req.query.body as string | undefined;
-
+  
+    //Approach Redefine Excessive Comments GET
     const response: AxiosResponse<Post[]> = await axios.get<Post[]>(
       `${process.env.BASE_URL}/posts/`
     );
@@ -55,7 +59,7 @@ export async function getPosts(req: Request, res: Response) {
       }
       finalPosts.push({ ...post, comments: commentArray });
     }
-
+    //Use Dynamic Keys
     let matchingPosts: Post[] = [];
     //Now We will check If the title and Body Exist in the Posts List
     if (titleKeyword && bodyKeyword) {

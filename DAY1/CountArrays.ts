@@ -7,6 +7,7 @@ function countArrays(array: MixedArray) {
   countArraysRecursive(array);
   console.log("Total Arrays in our Input is :" + count);
 }
+
 function countArraysRecursive(array: MixedArray) {
   for (let item of array) {
     if (Array.isArray(item)) {
@@ -17,3 +18,5 @@ function countArraysRecursive(array: MixedArray) {
 }
 
 countArrays(example2DArray);
+//Recrusive needs Base Codnition 
+//Calculation after call stack initated

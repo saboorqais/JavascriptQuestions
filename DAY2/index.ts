@@ -1,5 +1,5 @@
 import fetch, { Response } from "node-fetch";
-
+//cleanup with types is a must
 interface UserDataObject {
   id: number;
   name: string;
@@ -46,7 +46,7 @@ function getPhoneNumbers(data: UserDataList): PhoneList {
 
   return phoneNumbers;
 }
-
+//callback should be generics
 function getDataUsingCallbacks(url: string, callback: CallBack) {
   fetch(url)
     .then((response: Response) => response.json() as Promise<UserDataObject[]>)
@@ -63,7 +63,7 @@ getDataUsingCallbacks(
     return getPhoneNumbers(data);
   }
 );
-
+//Generic
 function getDataUsingPromise(url: string): Promise<UserDataObject[]> {
   return fetch(url)
     .then((response: Response) => {

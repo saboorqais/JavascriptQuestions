@@ -1,3 +1,5 @@
+
+//repalce let with const
 type DynamicObject = {
   [key: string]: number;
 };
@@ -10,7 +12,8 @@ let objectMap: DynamicObject = {
   C: 3,
 };
 function mappingKeystoArray(objectMap: DynamicObject): InnerArray[] {
-  let mapped2DArray: InnerArray[] = [];
+  const mapped2DArray: InnerArray[] = [];
+  //map forEach => Cleaner Approach
   for (let key in objectMap) {
     mapped2DArray.push([key, objectMap[key]]);
   }

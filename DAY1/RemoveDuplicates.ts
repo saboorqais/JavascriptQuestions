@@ -5,7 +5,7 @@ type DynamicObject = {
 };
 
 var duplicatesArray: InputArray = [1, 0, 1, 0];
-
+//avoid let and var and prefer const
 function removeDuplicates(array: InputArray): OutputArray {
   var ArraysKeys: DynamicObject = {};
   for (let item of array) {

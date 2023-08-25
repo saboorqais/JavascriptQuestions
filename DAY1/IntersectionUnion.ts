@@ -1,5 +1,9 @@
 import { removeDuplicatesWithSet } from "../DAY1/RemoveDuplicates";
 
+//mutability and immutable variables
+//const usage accross the board
+//pure functions should be prefered
+
 type SetItem = (number | string)[];
 
 function findIntersection(firstArray: SetItem, secondArray: SetItem): SetItem {
