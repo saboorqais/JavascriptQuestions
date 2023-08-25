@@ -5,6 +5,8 @@ import {
   UserDataObject,
   UserDataPostObject,
 } from "../types/responseTypes";
+import { makeGetRequest } from "../utils/axios";
+import { log } from "console";
 
 /**
  * Fetches Users and Posts from the Database and Append Each
@@ -46,42 +48,34 @@ export async function getUsers(req: Request, res: Response) {
     //Getting TargetZipCode from the Request Object to Be filtered
     const targetZipcode = req.query.zipcode as string | undefined;
 
-    let responseUser: AxiosResponse<UserDataObject[]> = await axios.get<
-      UserDataObject[]
-    >(`${process.env.BASE_URL}/users`);
-    let responsePost: AxiosResponse<Post[]> = await axios.get<Post[]>(
-      `${process.env.BASE_URL}/posts`
+    const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest(
+      `${process.env.BASE_URL}/users`
     );
 
-    let users: UserDataObject[] = responseUser.data;
-    let posts: Post[] = responsePost.data;
+    const users: UserDataObject[] = responseUser.data;
 
-    const finalUsers: UserDataPostObject[] = [];
-    //We are modifiying the Users List and assigning each User with its Published Post
-    for (let user of users) {
-      let postArray: Post[] = [];
+    const matchingUsers: UserDataObject[] = targetZipcode
+      ? users.filter((user) => user.address.zipcode === targetZipcode)
+      : [...users];
 
-      for (let post of posts) {
-        if (post.userId == user.id) {
-          postArray.push(post);
-        }
-      }
-      finalUsers.push({ ...user, posts: postArray });
-    }
-    let matchingUsers: UserDataPostObject[] = [];
-    //Checking if User Gave the Query Parameter
-    if (targetZipcode) {
-      matchingUsers = finalUsers.filter(
-        (user) => user.address.zipcode === targetZipcode
-      );
-    }
-    //If no Zipcode Is given then we will return all Users
-    else {
-      matchingUsers = [...finalUsers];
-    }
+    const finalUser: UserDataPostObject[] = [];
+    const results: AxiosResponse<Post[]>[] = await Promise.all(
+      matchingUsers.map(async (user: UserDataObject) => {
+        // Perform some asynchronous operation on 'item'
+        const result = await makeGetRequest<Post[]>(
+          `${process.env.BASE_URL}/posts?userId=${user.id}`
+        );
 
+        finalUser.push({
+          ...user,
+          posts: result.data,
+        });
+
+        return result;
+      })
+    );
     if (matchingUsers.length > 0) {
-      res.status(200).json({ users: matchingUsers });
+      res.status(200).json({ users: finalUser });
     } else {
       res.status(404).send("No users found with the specified zipcode.");
     }

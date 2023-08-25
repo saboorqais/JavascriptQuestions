@@ -6,7 +6,7 @@ import router from "./routes/routes";
 
 const app = express();
 
-const port: number = 3005;
+const port: number = 3006;
 
 app.use("/", router);
 
