@@ -47,7 +47,10 @@ export interface CompanyData extends Name {
   catchPhrase: string;
   bs: string;
 }
-
 export type DynamicStringObject = {
-  [key: string]: string | string[] | undefined;
+  [key: string]: string | DynamicStringObject;
 };
+
+
+
+

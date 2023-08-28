@@ -4,6 +4,8 @@ type DynamicObject = {
   [key: string]: number;
 };
 
+
+
 type InnerArray = (string | number)[];
 
 let objectMap: DynamicObject = {

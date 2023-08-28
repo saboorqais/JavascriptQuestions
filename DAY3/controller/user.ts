@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
+import {Request, response, Response} from "express";
 import axios, { AxiosResponse } from "axios";
 import {
+  DynamicStringObject,
   Post,
   UserDataObject,
   UserDataPostObject,
 } from "../types/responseTypes";
 import { makeGetRequest } from "../utils/axios";
-import { log } from "console";
-import checkMatch from "../utils/genericQueryHelper";
+import{findMatch} from "../utils/genericQueryHelper";
 
 /**
  * Fetches Users and Posts from the Database and Append Each
@@ -16,7 +16,8 @@ import checkMatch from "../utils/genericQueryHelper";
  * @param {import('express').Response} res - The Express response object.
  * @param {string} req.query.zipcode - The zipcode of users to fetch.(optional)
  * @example
- * // Example response when no query parameters are provided:
+ * // Example response whenimport checkMatch from "../utils/genericQueryHelper";
+import loopOver from "../utils/genericQueryHelper"; no query parameters are provided:
  * // Status: 200 OK
  * // Response:
  * // [
@@ -47,23 +48,25 @@ import checkMatch from "../utils/genericQueryHelper";
 export async function getUsers(req: Request, res: Response) {
   try {
     //Getting TargetZipCode from the Request Object to Be filtered
-    const query = req.query
-  
-    console.log(query)
+    const query = req.query as DynamicStringObject;
+
+    console.log(query);
     const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest<
       UserDataObject[]
     >(`${process.env.BASE_URL}/users`);
 
     const users: UserDataObject[] = responseUser.data;
 
-    const matchingUsers: UserDataObject[] = Object.keys(query).length>0
-      ? users.filter((user) => {return checkMatch(user, req.query);})
-      : [...users];
+    const matchingUsers: UserDataObject[] =
+      Object.keys(query).length > 0
+        ? users.filter((user) => {
+          console.log(user)
+            return findMatch<UserDataObject,DynamicStringObject>(user, query);
+          })
+        : [...users];
     if (!(matchingUsers.length > 0)) {
-      res.status(404).send("No users found with the specified zipcode.");
+      res.status(404).send("No users found with the specified Query.");
     }
-
-
 
     const results: UserDataPostObject[] = await Promise.all(
       matchingUsers.map(async (user: UserDataObject) => {
@@ -138,7 +141,9 @@ export async function getUsersPost(req: Request, res: Response) {
       `${process.env.BASE_URL}/posts?userId=${id}`
     );
     const responseUser: AxiosResponse<UserDataObject> =
-      await makeGetRequest<UserDataObject>(`${process.env.BASE_URL}/users/${id}`);
+      await makeGetRequest<UserDataObject>(
+        `${process.env.BASE_URL}/users/${id}`
+      );
 
     const posts: Post[] = responsePost.data;
     const user: UserDataObject = responseUser.data;
