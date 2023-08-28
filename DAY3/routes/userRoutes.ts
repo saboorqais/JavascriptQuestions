@@ -1,6 +1,6 @@
-import { Router } from "express";
+import {Router} from "express";
 
-import { getUsers, getUsersPost } from "../controller/user";
+import {getUsers, getUsersPost} from "../controller/user";
 
 const userRoutes = Router();
 

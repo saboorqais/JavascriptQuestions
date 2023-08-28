@@ -1,13 +1,6 @@
 import {Request, Response} from "express";
-import axios, {AxiosResponse} from "axios";
-import {
-    Comment,
-    DynamicStringObject,
-    Post,
-    PostComment,
-    UserDataObject,
-    UserDataPostObject
-} from "../types/responseTypes";
+import {AxiosResponse} from "axios";
+import {DynamicStringObject, Post} from "../types/responseTypes";
 import {makeGetRequest} from "../utils/axios";
 import {findMatch} from "../utils/genericQueryHelper";
 
@@ -62,7 +55,7 @@ export async function getPosts(req: Request, res: Response) {
         const results: Post[] = await Promise.all(
             matchingPosts.map(async (post: Post) => {
                 // Perform some asynchronous operation on 'item'
-                const result:AxiosResponse<Post[]> = await makeGetRequest<Post[]>(
+                const result: AxiosResponse<Post[]> = await makeGetRequest<Post[]>(
                     `${process.env.BASE_URL}/comments?postId=${post.id}`
                 );
                 return {

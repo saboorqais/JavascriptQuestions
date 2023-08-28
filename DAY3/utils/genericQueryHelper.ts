@@ -42,11 +42,11 @@ export function findMatch<T, T2>(
 ): boolean {
     if (typeof querys === 'object' && querys !== null) {
 
-        const booleanArray = Object.keys(querys).map((item: string) => {
+        const booleanArray:boolean[] = Object.keys(querys).map((item: string) => {
 
             return checkMatch<T, T2>(obj, querys, item);
         });
-        return booleanArray.some((item) => item === true);
+        return booleanArray.some((item:boolean):boolean => item === true);
     }
     return false
 

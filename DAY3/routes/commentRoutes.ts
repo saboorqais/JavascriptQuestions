@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { getComment, getComments } from "../controller/comments";
+import {Router} from "express";
+import {getComment, getComments} from "../controller/comments";
 
 const commentsRoute = Router();
 
