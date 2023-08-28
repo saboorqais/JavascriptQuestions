@@ -48,26 +48,23 @@ import loopOver from "../utils/genericQueryHelper"; no query parameters are prov
 export async function getUsers(req: Request, res: Response) {
   try {
     //Getting TargetZipCode from the Request Object to Be filtered
-    const query = req.query as DynamicStringObject;
+    const query:DynamicStringObject = req.query as DynamicStringObject;
 
-    console.log(query);
     const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest<
       UserDataObject[]
     >(`${process.env.BASE_URL}/users`);
 
     const users: UserDataObject[] = responseUser.data;
-
+    const queryLength:number=Object.keys(query).length
     const matchingUsers: UserDataObject[] =
-      Object.keys(query).length > 0
+        queryLength > 0
         ? users.filter((user) => {
-          console.log(user)
             return findMatch<UserDataObject,DynamicStringObject>(user, query);
           })
         : [...users];
     if (!(matchingUsers.length > 0)) {
       res.status(404).send("No users found with the specified Query.");
     }
-
     const results: UserDataPostObject[] = await Promise.all(
       matchingUsers.map(async (user: UserDataObject) => {
         // Perform some asynchronous operation on 'item'

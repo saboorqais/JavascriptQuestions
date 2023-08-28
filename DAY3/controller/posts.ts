@@ -1,6 +1,15 @@
 import { Request, Response } from "express";
-import axios, { AxiosResponse } from "axios";
-import { Comment, Post, PostComment } from "../types/responseTypes";
+import axios, {AxiosResponse} from "axios";
+import {
+  Comment,
+  DynamicStringObject,
+  Post,
+  PostComment,
+  UserDataObject,
+  UserDataPostObject
+} from "../types/responseTypes";
+import {makeGetRequest} from "../utils/axios";
+import {findMatch} from "../utils/genericQueryHelper";
 
 /**
  * Fetches Users and Posts from the Database and Append Each
@@ -32,69 +41,41 @@ import { Comment, Post, PostComment } from "../types/responseTypes";
 //Promote Object Destructring
 export async function getPosts(req: Request, res: Response) {
   try {
-    //getting Keywords from the Request Object
-    const titleKeyword = req.query.title as string | undefined;
-    const bodyKeyword = req.query.body as string | undefined;
+    //Getting TargetZipCode from the Request Object to Be filtered
+    const query:DynamicStringObject = req.query as DynamicStringObject;
   
     //Approach Redefine Excessive Comments GET
-    const response: AxiosResponse<Post[]> = await axios.get<Post[]>(
+    const response: AxiosResponse<Post[]> = await makeGetRequest<Post[]>(
       `${process.env.BASE_URL}/posts/`
     );
-    const responseComments: AxiosResponse<Comment[]> = await axios.get<
-      Comment[]
-    >(`${process.env.BASE_URL}/comments`);
-
-    const comments: Comment[] = responseComments.data;
     const allPosts: Post[] = response.data;
-
-    const finalPosts: PostComment[] = [];
-    // Iterating over the Posts and Assigning each Post with its respective Comments
-    for (let post of allPosts) {
-      let commentArray: Comment[] = [];
-
-      for (let comment of comments) {
-        if (comment.postId == post.id) {
-          commentArray.push(comment);
-        }
-      }
-      finalPosts.push({ ...post, comments: commentArray });
+    const queryLength:number=Object.keys(query).length
+    const matchingPosts: Post[] =
+        queryLength > 0
+            ? allPosts.filter((post:Post) => {
+              return findMatch<Post,DynamicStringObject>(post, query);
+            })
+            : [...allPosts];
+    if (!(matchingPosts.length > 0)) {
+      res.status(404).send("No Posts found with the specified Query.");
     }
-    //Use Dynamic Keys
-    let matchingPosts: Post[] = [];
-    //Now We will check If the title and Body Exist in the Posts List
-    if (titleKeyword && bodyKeyword) {
-      let titleRegExp = new RegExp(titleKeyword, "i");
-      let bodyRegExp = new RegExp(bodyKeyword, "i");
-      let posts: Post[] = finalPosts.filter(
-        (post) => titleRegExp.test(post.title) || bodyRegExp.test(post.body)
-      );
-      matchingPosts = [...posts];
-    }
-    //If Body Keywords Exist then We will return based on this
-    else if (bodyKeyword) {
-      let bodyRegExp = new RegExp(bodyKeyword, "i");
-      let posts: Post[] = finalPosts.filter((post) =>
-        bodyRegExp.test(post.body)
-      );
-      matchingPosts = [...posts, ...matchingPosts];
-    }
-    //If Title Keywords Exist then We will return based on this
-    else if (titleKeyword) {
-      let titleRegExp = new RegExp(titleKeyword, "i");
-      let posts: Post[] = finalPosts.filter((post) =>
-        titleRegExp.test(post.title)
-      );
-      matchingPosts = [...posts, ...matchingPosts];
-    }
-    //If No Keywords are given then we will return all the values
-    else {
-      matchingPosts = [...finalPosts];
-    }
+    const results: Post[] = await Promise.all(
+        matchingPosts.map(async (post: Post) => {
+          // Perform some asynchronous operation on 'item'
+          const result = await makeGetRequest<Post[]>(
+              `${process.env.BASE_URL}/comments?postId=${post.id}`
+          );
+          return {
+            ...post,
+            comments: result.data,
+          };
+        })
+    );
 
     if (matchingPosts.length > 0) {
-      res.status(200).json({ posts: matchingPosts });
+      res.status(200).json({ posts: results });
     } else {
-      res.status(200).send(finalPosts);
+      res.status(200).send(results);
     }
   } catch (error) {
     res.status(500).send("Error searching posts");

@@ -1,6 +1,6 @@
-function getValue<T>(obj: T |string, key: string): (T | string) {
+function getValue<T>(obj: T | string, key: string): (T | string) {
     const {[key as keyof T]: value} = obj;
-    return typeof value ==='object' ?value as T :value as string ;
+    return typeof value === 'object' ? value as T : value as string;
 }
 
 function checkMatch<T, T2>(
@@ -9,7 +9,7 @@ function checkMatch<T, T2>(
     query: string
 ): boolean {
     if (typeof obj === 'object' && obj !== null && !obj.hasOwnProperty(query)) {
-        const condition:boolean[] = Object.keys(obj).map((item: string) => {
+        const condition: boolean[] = Object.keys(obj).map((item: string) => {
 
             const value: T | string = getValue<T>(obj, item);
             return checkMatch<T, T2>(
@@ -19,11 +19,11 @@ function checkMatch<T, T2>(
             );
 
         });
-        return condition.some((item:boolean):boolean => item === true);
+        return condition.some((item: boolean): boolean => item === true);
 
     } else {
 
-        const valueToSearchFrom:T | string = getValue(obj, query);
+        const valueToSearchFrom: T | string = getValue(obj, query);
 
         const valueToFind: string = querys[query as keyof T2] as string
 
@@ -43,9 +43,8 @@ export function findMatch<T, T2>(
     if (typeof querys === 'object' && querys !== null) {
 
         const booleanArray = Object.keys(querys).map((item: string) => {
-            const value = checkMatch<T, T2>(obj, querys, item);
 
-            return value
+            return checkMatch<T, T2>(obj, querys, item);
         });
         return booleanArray.some((item) => item === true);
     }
