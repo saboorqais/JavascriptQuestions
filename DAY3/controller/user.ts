@@ -7,6 +7,7 @@ import {
 } from "../types/responseTypes";
 import { makeGetRequest } from "../utils/axios";
 import { log } from "console";
+import checkMatch from "../utils/genericQueryHelper";
 
 /**
  * Fetches Users and Posts from the Database and Append Each
@@ -46,38 +47,39 @@ import { log } from "console";
 export async function getUsers(req: Request, res: Response) {
   try {
     //Getting TargetZipCode from the Request Object to Be filtered
-    const targetZipcode = req.query.zipcode as string | undefined;
-
-    const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest(
-      `${process.env.BASE_URL}/users`
-    );
+    const query = req.query
+  
+    console.log(query)
+    const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest<
+      UserDataObject[]
+    >(`${process.env.BASE_URL}/users`);
 
     const users: UserDataObject[] = responseUser.data;
 
-    const matchingUsers: UserDataObject[] = targetZipcode
-      ? users.filter((user) => user.address.zipcode === targetZipcode)
+    const matchingUsers: UserDataObject[] = Object.keys(query).length>0
+      ? users.filter((user) => {return checkMatch(user, req.query);})
       : [...users];
+    if (!(matchingUsers.length > 0)) {
+      res.status(404).send("No users found with the specified zipcode.");
+    }
 
-    const finalUser: UserDataPostObject[] = [];
-    const results: AxiosResponse<Post[]>[] = await Promise.all(
+
+
+    const results: UserDataPostObject[] = await Promise.all(
       matchingUsers.map(async (user: UserDataObject) => {
         // Perform some asynchronous operation on 'item'
         const result = await makeGetRequest<Post[]>(
           `${process.env.BASE_URL}/posts?userId=${user.id}`
         );
-
-        finalUser.push({
+        return {
           ...user,
           posts: result.data,
-        });
-
-        return result;
+        };
       })
     );
-    if (matchingUsers.length > 0) {
-      res.status(200).json({ users: finalUser });
-    } else {
-      res.status(404).send("No users found with the specified zipcode.");
+
+    if (results.length > 0) {
+      res.status(200).json(results);
     }
   } catch (error: Error | unknown | undefined) {
     if (error instanceof Error) {
@@ -131,13 +133,16 @@ export async function getUsersPost(req: Request, res: Response) {
   try {
     //Getting Id from Request Object as Query Parameter
     const id: string = req.params.id;
-    const responsePost: AxiosResponse<Post[]> = await axios.get<Post[]>(
+
+    const responsePost: AxiosResponse<Post[]> = await makeGetRequest<Post[]>(
       `${process.env.BASE_URL}/posts?userId=${id}`
     );
     const responseUser: AxiosResponse<UserDataObject> =
-      await axios.get<UserDataObject>(`${process.env.BASE_URL}/users/${id}`);
+      await makeGetRequest<UserDataObject>(`${process.env.BASE_URL}/users/${id}`);
+
     const posts: Post[] = responsePost.data;
     const user: UserDataObject = responseUser.data;
+
     res.status(200).send({ ...user, posts });
   } catch (error) {
     res.status(500).send("Error fetching users");
