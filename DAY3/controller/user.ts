@@ -85,7 +85,7 @@ export async function getUsers(req: Request, res: Response) {
     if (error instanceof Error) {
       res.status(500).send(`Error fetching users : ${error.message}`);
     } else {
-      res.status(500).send(`Error fetching users : ${error}`);
+      throw error
     }
   }
 }
@@ -147,6 +147,6 @@ export async function getUsersPost(req: Request, res: Response) {
 
     res.status(200).send({ ...user, posts });
   } catch (error) {
-    res.status(500).send("Error fetching users");
+    throw error
   }
 }

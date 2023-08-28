@@ -9,7 +9,7 @@ var condition = false
 function mutate(comments,depth,targetID){
     
     if (!( targetID == undefined)){
-        for(let reply of comments){
+        for(const reply of comments){
             if(depth==0){
                 if(targetID == reply.id){
                
