@@ -1,6 +1,5 @@
 function CheckObject(params: Object): boolean {
-    return typeof params === 'object'
-
+    return typeof params === "object";
 }
 
-export default CheckObject
+export default CheckObject;

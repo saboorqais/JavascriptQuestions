@@ -56,7 +56,3 @@ export interface CompanyData extends Name {
 export type DynamicStringObject = {
     [key: string]: string | DynamicStringObject;
 };
-
-
-
-

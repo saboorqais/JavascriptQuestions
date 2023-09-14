@@ -1,8 +1,8 @@
-import {Request, Response} from "express";
-import {AxiosResponse} from "axios";
-import {DynamicStringObject, Post, UserDataObject, UserDataPostObject,} from "../types/responseTypes";
-import {makeGetRequest} from "../utils/axios";
-import {findMatch} from "../utils/genericQueryHelper";
+import { Request, Response } from "express";
+import { AxiosResponse } from "axios";
+import { DynamicStringObject, Post, UserDataObject, UserDataPostObject } from "../types/responseTypes";
+import { makeGetRequest } from "../utils/axios";
+import { findMatch } from "../utils/genericQueryHelper";
 
 /**
  * Fetches Users and Posts from the Database and Append Each
@@ -45,17 +45,15 @@ export async function getUsers(req: Request, res: Response) {
         //Getting TargetZipCode from the Request Object to Be filtered
         const query: DynamicStringObject = req.query as DynamicStringObject;
 
-        const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest<
-            UserDataObject[]
-        >(`${process.env.BASE_URL}/users`);
+        const responseUser: AxiosResponse<UserDataObject[]> = await makeGetRequest<UserDataObject[]>(`${process.env.BASE_URL}/users`);
 
         const users: UserDataObject[] = responseUser.data;
-        const queryLength: number = Object.keys(query).length
+        const queryLength: number = Object.keys(query).length;
         const matchingUsers: UserDataObject[] =
             queryLength > 0
                 ? users.filter((user) => {
-                    return findMatch<UserDataObject, DynamicStringObject>(user, query);
-                })
+                      return findMatch<UserDataObject, DynamicStringObject>(user, query);
+                  })
                 : [...users];
         if (!(matchingUsers.length > 0)) {
             res.status(404).send("No users found with the specified Query.");
@@ -63,9 +61,7 @@ export async function getUsers(req: Request, res: Response) {
         const results: UserDataPostObject[] = await Promise.all(
             matchingUsers.map(async (user: UserDataObject) => {
                 // Perform some asynchronous operation on 'item'
-                const result = await makeGetRequest<Post[]>(
-                    `${process.env.BASE_URL}/posts?userId=${user.id}`
-                );
+                const result = await makeGetRequest<Post[]>(`${process.env.BASE_URL}/posts?userId=${user.id}`);
                 return {
                     ...user,
                     posts: result.data,
@@ -80,7 +76,7 @@ export async function getUsers(req: Request, res: Response) {
         if (error instanceof Error) {
             res.status(500).send(`Error fetching users : ${error.message}`);
         } else {
-            throw error
+            throw error;
         }
     }
 }
@@ -130,19 +126,14 @@ export async function getUsersPost(req: Request, res: Response) {
         //Getting Id from Request Object as Query Parameter
         const id: string = req.params.id;
 
-        const responsePost: AxiosResponse<Post[]> = await makeGetRequest<Post[]>(
-            `${process.env.BASE_URL}/posts?userId=${id}`
-        );
-        const responseUser: AxiosResponse<UserDataObject> =
-            await makeGetRequest<UserDataObject>(
-                `${process.env.BASE_URL}/users/${id}`
-            );
+        const responsePost: AxiosResponse<Post[]> = await makeGetRequest<Post[]>(`${process.env.BASE_URL}/posts?userId=${id}`);
+        const responseUser: AxiosResponse<UserDataObject> = await makeGetRequest<UserDataObject>(`${process.env.BASE_URL}/users/${id}`);
 
         const posts: Post[] = responsePost.data;
         const user: UserDataObject = responseUser.data;
 
-        res.status(200).send({...user, posts});
+        res.status(200).send({ ...user, posts });
     } catch (error) {
-        throw error
+        throw error;
     }
 }
